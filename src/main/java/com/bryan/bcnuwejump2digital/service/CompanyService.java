@@ -1,6 +1,7 @@
 package com.bryan.bcnuwejump2digital.service;
 
 import com.bryan.bcnuwejump2digital.dto.ICountCompanyDTO;
+import com.bryan.bcnuwejump2digital.exception.EndpointNotDefinedException;
 import com.bryan.bcnuwejump2digital.model.Company;
 import com.bryan.bcnuwejump2digital.repository.CompanyRepository;
 import org.springframework.stereotype.Service;
@@ -16,25 +17,28 @@ public class CompanyService {
         this.repository = repository;
     }
 
+    public List<Company> findAllAndOrderByFounded(String direction) {
+        if (direction.equalsIgnoreCase("asc")) {
+            return repository.findAllAndOrderByFoundedAsc();
 
-    public List<Company> findAll() {
-        return repository.findAll();
+        } else if (direction.equalsIgnoreCase("desc")) {
+            return repository.findAllAndOrderByFoundedDesc();
+
+        } else {
+            throw new EndpointNotDefinedException("Specify asc for ascending or desc fro descending direction");
+        }
     }
 
-    public List<Company> findAllAndSortDescByFounded() {
-        return repository.findAllAndOrderByFoundedDesc();
-    }
+    public List<Company> findAllAndOrderBySize(String direction) {
+        if (direction.equalsIgnoreCase("asc")) {
+            return repository.findAllAndOrderBySizeAsc();
 
-    public List<Company> findAllAndSortAscByFounded() {
-        return repository.findAllAndOrderByFoundedAsc();
-    }
+        } else if (direction.equalsIgnoreCase("desc")) {
+            return repository.findAllAndOrderBySizeDesc();
 
-    public List<ICountCompanyDTO> countByIndustry() {
-        return repository.countByIndustry();
-    }
-
-    public List<Company> findAllAndSortByFounded() {
-        return repository.findAllAndOrderBySizeAsc();
+        } else {
+            throw new EndpointNotDefinedException("Specify asc for ascending or desc for descending direction");
+        }
     }
 
     public HashMap<String, List<ICountCompanyDTO>> countByIndustrySizeAndFounded() {
